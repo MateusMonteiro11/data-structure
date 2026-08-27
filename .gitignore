@@ -1,0 +1,57 @@
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (directory dependencies)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dYSM/
+*.su
+*.idb
+*.pdb
+
+# Backup and temporary files
+*~
+*.bak
+*.swp
+*.tmp
+
+# Common IDE/Build system directories
+.vscode/
+.idea/
+build/
+dist/
+cmake-build-debug/
+cmake-build-release/

@@ -17,7 +17,7 @@ typedef struct {
 
 // Cria uma nova célula com o valor especificado
 Celula *cria_celula(int valor){
-	Celula *nova_celula = (Celula *)malloc(sizeof(Celula));
+	Celula *nova_celula = malloc(sizeof *nova_celula);
     if (!nova_celula) {
         fprintf(stderr, "Erro ao alocar memória para nova célula.\n");
         exit(EXIT_FAILURE);
@@ -30,7 +30,7 @@ Celula *cria_celula(int valor){
 
 // Cria uma nova fila vazia
 Queue *cria_queue(){
-	Queue *queue = (Queue *)malloc(sizeof(Queue));
+	Queue *queue = malloc(sizeof *queue);
     if (!queue) {
         fprintf(stderr, "Erro ao alocar memória para a fila.\n");
         exit(EXIT_FAILURE);
@@ -55,13 +55,13 @@ void enqueue(Queue *queue, int valor){
 }
 
 // Operação DEQUEUE: remove elemento do início da fila (FIFO)
-int dequeue(Queue *queue){
+int dequeue(Queue *queue, int *valor){
     if (!queue->head) {
         fprintf(stderr, "Fila vazia. Não é possível remover elementos.\n");
-        return -1; // Retorna um valor inválido ou pode lançar uma exceção
+        return 0; // Retorna falha quando a fila está vazia
     }
     Celula *temp = queue->head; // Armazena a célula a ser removida
-    int valor = temp->valor; // Armazena o valor da célula
+    *valor = temp->valor; // Armazena o valor da célula removida
     queue->head = queue->head->proximo; // Atualiza o head para o próximo elemento
     if (queue->head) {
         queue->head->anterior = NULL; // Atualiza o anterior do novo head
@@ -70,7 +70,7 @@ int dequeue(Queue *queue){
     }
     free(temp); // Libera a memória da célula removida
     queue->qtde--; // Decrementa a quantidade de elementos na fila
-    return valor; // Retorna o valor removido
+    return 1; // Retorna sucesso na remoção
 }
 
 // Exibe todos os elementos da fila (do início ao fim)
@@ -84,6 +84,16 @@ void show(Queue *queue){
         }
     }
     printf("\n"); // Nova linha após imprimir todos os elementos
+}
+
+void free_queue(Queue *queue){
+    Celula *atual = queue->head;
+    while (atual) {
+        Celula *proxima = atual->proximo;
+        free(atual);
+        atual = proxima;
+    }
+    free(queue);
 }
 
 int main(void) {
@@ -104,8 +114,8 @@ int main(void) {
 
     // Remove todos os elementos da fila
     for (int i = 0; i < size; i++) {
-        int valor_removido = dequeue(queue);
-        if (valor_removido != -1) {
+        int valor_removido;
+        if (dequeue(queue, &valor_removido)) {
             printf("Valor removido: %d, Fila restante:", valor_removido);
             if (queue->head) {
                 printf(" ");
@@ -114,6 +124,6 @@ int main(void) {
         }
     }
 
-    free(queue);
+    free_queue(queue);
     return 0; // Finaliza o programa com sucesso
 }
